@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "199577270778",
+    "firebase_url": "https://zylun-ops-app.firebaseio.com",
+    "project_id": "zylun-ops-app",
+    "storage_bucket": "zylun-ops-app.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:199577270778:android:3bbcf0987f58cabd",
+        "android_client_info": {
+          "package_name": "com.operationsapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "199577270778-dmipgcb645ti3iejtavun8uuqm77fomj.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDHsONE3vjl4ZmwtveiC1_VElpQVTIpjoE"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
