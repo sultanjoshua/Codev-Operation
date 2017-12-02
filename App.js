@@ -32,13 +32,25 @@ export default class App1 extends React.Component {
     //     console.log(user.isAnonymous);
     //   });
 
-    // this.database = firebase.database();
+    // createEmployee('josh', 'joshuas@codev.com');
 
+    firebase.database().ref('employees').on('value', function(snapshot) {
+      snapshot.forEach(function(childSnapshot) {
+        var childKey = childSnapshot.key;
+        var childData = childSnapshot.val();
+
+        alert('Username: ' + childData.username + " email: " + childData.email);
+        console.log('Username: ' + childData.username + " email: " + childData.email);
+      });
+    });
+  }
+
+  createEmployee(name, email) {
     var key = firebase.database().ref().child('employees').push().key;
 
     firebase.database().ref('employees/' + key).set({
-      username: 'pong',
-      email: 'michaelg@codev.com'
+      username: name,
+      email: email
     });
   }
 
