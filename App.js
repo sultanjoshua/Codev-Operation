@@ -4,14 +4,12 @@ import firebase from 'react-native-firebase';
 
 export default class App1 extends React.Component {
 
+  // database = null;
+  // firebaseApp;
+
   constructor() {
     super();
-    this.state = {
-      isReady: false
-    };
-  }
 
-  componentDidMount() {
     var firebaseConfig = {
       apiKey: "AIzaSyDajFDLX7j3sdbSvcnGUfbeJnFwfAcGecE",
       authDomain: "zylun-ops-app.firebaseapp.com",
@@ -20,13 +18,28 @@ export default class App1 extends React.Component {
       storageBucket: "zylun-ops-app.appspot.com",
       messagingSenderId: "199577270778"
     };
-  
-    var firebaseApp = firebase.initializeApp(firebaseConfig);
 
+    firebase.initializeApp(firebaseConfig);
+
+    this.state = {
+      isReady: false
+    };
+  }
+
+  componentDidMount() {
     // firebase.auth().signInAnonymously()
     //   .then((user) => {
     //     console.log(user.isAnonymous);
     //   });
+
+    // this.database = firebase.database();
+
+    var key = firebase.database().ref().child('employees').push().key;
+
+    firebase.database().ref('employees/' + key).set({
+      username: 'pong',
+      email: 'michaelg@codev.com'
+    });
   }
 
   render() {
