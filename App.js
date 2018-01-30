@@ -32,7 +32,8 @@ export default class App1 extends React.Component {
     //     console.log(user.isAnonymous);
     //   });
 
-    // createEmployee('josh', 'joshuas@codev.com');
+    this.createEmployee('josh', 'joshuas@codev.com');
+    this.createEmployee('joshua', 'joshuas@codev.com');
 
     firebase.database().ref('employees').on('value', function(snapshot) {
       snapshot.forEach(function(childSnapshot) {

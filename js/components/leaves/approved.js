@@ -19,15 +19,15 @@ import {
 
 import styles from "./styles";
 
-const joshua = require("../../../img/contacts/joshua.jpg");
-const richyll = require("../../../img/contacts/richyll.jpg");
-const michael = require("../../../img/contacts/michael.png");
-const pratik = require("../../../img/contacts/pratik.png");
-const sanket = require("../../../img/contacts/sanket.png");
-const megha = require("../../../img/contacts/megha.png");
-const atul = require("../../../img/contacts/atul.png");
-const saurabh = require("../../../img/contacts/saurabh.png");
-const varun = require("../../../img/contacts/varun.png");
+const joshua = require("../../../img/joshua.jpg");
+const richyll = require("../../../img/richyll.jpg");
+const michael = require("../../../img/michael.png");
+const pratik = require("../../../img/pratik.png");
+const sanket = require("../../../img/sanket.png");
+const megha = require("../../../img/megha.png");
+const atul = require("../../../img/atul.png");
+const saurabh = require("../../../img/saurabh.png");
+const varun = require("../../../img/varun.png");
 
 const datas = [
   {

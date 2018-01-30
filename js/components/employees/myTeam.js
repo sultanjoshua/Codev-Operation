@@ -19,9 +19,9 @@ import {
 
 import styles from "./styles";
 
-const joshua = require("../../../img/contacts/joshua.jpg");
-const richyll = require("../../../img/contacts/richyll.jpg");
-const michael = require("../../../img/contacts/michael.png");
+const joshua = require("../../../img/joshua.jpg");
+const richyll = require("../../../img/richyll.jpg");
+const michael = require("../../../img/michael.png");
 
 const datas = [
   {
