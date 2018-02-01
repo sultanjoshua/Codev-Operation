@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import {Image} from 'react-native'
 
 import {
   Container,
@@ -18,13 +19,14 @@ import {
 } from "native-base";
 
 import styles from "./styles";
+import App from "../../App"
 
 const joshua = require("../../../img/joshua.jpg");
 const richyll = require("../../../img/richyll.jpg");
 const michael = require("../../../img/michael.png");
 const pratik = require("../../../img/pratik.png");
 const sanket = require("../../../img/sanket.png");
-const megha = require("../../../img/megha.png");
+const megha = require("../../../img/sanket.png");
 const atul = require("../../../img/atul.png");
 const saurabh = require("../../../img/saurabh.png");
 const varun = require("../../../img/varun.png");
@@ -96,34 +98,54 @@ const datas = [
 ];
 
 class All extends Component {
+  
+dataFirebase = App.dataFirebase;
+
   render() {
+    i = 0;
+    var dataDb = new Array();
+    var bgColor = "#DA4437";
+    dataFirebase.forEach(function(childSnapshot) {
+      var childKey = childSnapshot.key;
+      var childData = childSnapshot.val();
+
+      // alert('image: ' + childData.image + "\n is_login: " + childData.is_login
+      // + "\n jobtitle: " + childData.jobtitle
+      // + "\n name: " + childData.name);
+      // console.log('image: ' + childData.image + " is_login: " + childData.is_login
+      // + " jobtitle: " + childData.jobtitle
+      // + " name: " + childData.name);
+
+      dataDb[i] = childData;
+      i++;
+    });
     return (
-      <Container style={styles.container}>
+      
+      <Container style={styles.container}>   
         <Content>
           <List
-            dataArray={datas}
+            dataArray={dataDb}            
             renderRow={data =>
               <ListItem avatar>
                 <Left>
-                  <Thumbnail small source={data.img} />
+                  <Image source={{uri : data.image}} style = {{height: 50, width: 50, margin: 1 }} />
                 </Left>
                 <Body>
-                  <Text>{data.text}</Text>
-                  <Text numberOfLines={1} note>{data.note}</Text>
+                  <Text>{data.name}</Text>
+                  <Text numberOfLines={1} note>{data.jobtitle}</Text>
                 </Body>
-                {data.status &&
-									<Right style={{ flex: 1 }}>
-										<Badge
-											style={{
-												borderRadius: 3,
-												height: 25,
-												width: 72,
-												backgroundColor: data.bg,
-											}}
-										>
-											<Text style={styles.badgeText}>{`${data.status}`}</Text>
-										</Badge>
-									</Right>}
+                <Right style={{ flex: 1 }}>
+                  <Badge
+                    style={{
+                      borderRadius: 3,
+                      height: 25,
+                      width: 72,
+                      backgroundColor : "#DA4437",
+                    }}
+                  >
+                    <Text style={styles.badgeText}>{data.is_login}</Text>
+                  </Badge>
+                </Right>
               </ListItem>}
           />
         </Content>
