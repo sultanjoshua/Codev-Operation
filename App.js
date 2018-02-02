@@ -7,7 +7,8 @@ export default class App1 extends React.Component {
   // database = null;
   // firebaseApp;
 
-  dataFirebase = null;
+  dataFirebase_employee = null;
+  dataFirebase_leave = null;
 
   constructor() {
     super();
@@ -39,10 +40,10 @@ export default class App1 extends React.Component {
 
     firebase.database().ref('employees').on('value', function(snapshot) {
 
-      dataFirebase = snapshot;
-      snapshot.forEach(function(childSnapshot) {
-        var childKey = childSnapshot.key;
-        var childData = childSnapshot.val();
+      dataFirebase_employee = snapshot;
+      // snapshot.forEach(function(childSnapshot) {
+      //   var childKey = childSnapshot.key;
+      //   var childData = childSnapshot.val();
 
         // alert('image: ' + childData.image + "\n is_login: " + childData.is_login
         // + "\n jobtitle: " + childData.jobtitle
@@ -51,8 +52,25 @@ export default class App1 extends React.Component {
         // + " jobtitle: " + childData.jobtitle
         // + " name: " + childData.name);
 
-      });
+      //});
     });
+
+    firebase.database().ref('leaves').on('value', function(snapshot) {
+      
+            dataFirebase_leave = snapshot;
+            // snapshot.forEach(function(childSnapshot) {
+            //   var childKey = childSnapshot.key;
+            //   var childData = childSnapshot.val();
+      
+              // alert('image: ' + childData.image + "\n is_login: " + childData.is_login
+              // + "\n jobtitle: " + childData.jobtitle
+              // + "\n name: " + childData.name);
+              // console.log('image: ' + childData.image + " is_login: " + childData.is_login
+              // + " jobtitle: " + childData.jobtitle
+              // + " name: " + childData.name);
+      
+            //});
+          });
   }
 
   createEmployee(name, email) {

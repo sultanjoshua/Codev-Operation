@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import {Image} from 'react-native'
 
 import {
   Container,
@@ -19,6 +20,7 @@ import {
 } from "native-base";
 
 import styles from "./styles";
+import App from "../../App"
 
 const joshua = require("../../../img/joshua.jpg");
 const richyll = require("../../../img/richyll.jpg");
@@ -48,20 +50,35 @@ const datas = [
 ];
 
 class Pending extends Component {
+  dataFirebase_leave = App.dataFirebase_leave;
+  
   render() {
+
+    i = 0;
+    var dataDb = new Array();
+    var bgColor = "#3591FA";
+    dataFirebase_leave.forEach(function(childSnapshot) {
+      var childKey = childSnapshot.key;
+      var childData = childSnapshot.val();
+      if (childData.status == "Pending") {
+        dataDb[i] = childData;
+        i++;
+      }
+    });
+
     return (
       <Container style={styles.container}>
         <Content>
           <List
-            dataArray={datas}
+            dataArray={dataDb}
             renderRow={data =>
               <ListItem thumbnail>
                 <Left>
-                  <Thumbnail square size={55} source={data.img} />
+                <Image source={{uri : data.image_path}} style = {{height: 50, width: 50, margin: 1 }} />
                 </Left>
                 <Body>
-                  <Text>{data.text}</Text>
-                  <Text numberOfLines={1} note>{data.note}</Text>
+                  <Text>{data.name}</Text>
+                  <Text numberOfLines={1} note>{data.dates}</Text>
                 </Body>
                 {data.status &&
 									<Right style={{ flex: 1 }}>
@@ -70,10 +87,10 @@ class Pending extends Component {
 												borderRadius: 3,
 												height: 25,
 												width: 72,
-												backgroundColor: data.bg,
+												backgroundColor: bgColor,
 											}}
 										>
-											<Text style={styles.badgeText}>{`${data.status}`}</Text>
+											<Text style={styles.badgeText}>{`${data.type}`}</Text>
 										</Badge>
 									</Right>}
               </ListItem>}

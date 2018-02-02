@@ -99,13 +99,13 @@ const datas = [
 
 class All extends Component {
   
-dataFirebase = App.dataFirebase;
+dataFirebase_employee = App.dataFirebase_employee;
 
   render() {
     i = 0;
     var dataDb = new Array();
     var bgColor = "#DA4437";
-    dataFirebase.forEach(function(childSnapshot) {
+    dataFirebase_employee.forEach(function(childSnapshot) {
       var childKey = childSnapshot.key;
       var childData = childSnapshot.val();
 
