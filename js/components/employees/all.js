@@ -128,7 +128,7 @@ dataFirebase = App.dataFirebase;
             renderRow={data =>
               <ListItem avatar>
                 <Left>
-                  <Image source={{uri : data.image}} style = {{height: 50, width: 50, margin: 1 }} />
+                  <Image source={{uri : data.image_path}} style = {{height: 50, width: 50, margin: 1 }} />
                 </Left>
                 <Body>
                   <Text>{data.name}</Text>
@@ -143,7 +143,7 @@ dataFirebase = App.dataFirebase;
                       backgroundColor : "#DA4437",
                     }}
                   >
-                    <Text style={styles.badgeText}>{data.is_login}</Text>
+                    <Text style={styles.badgeText}>{data.clockin_status}</Text>
                   </Badge>
                 </Right>
               </ListItem>}
