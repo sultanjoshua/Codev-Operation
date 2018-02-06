@@ -120,13 +120,21 @@ class All extends Component {
           text: childData.name,
           note: childData.job_title,
           status: childData.clockin_status,
-          bg: childData.clockin_status == "In" ? "#1EBC7C" : "#DA4437",
+          bg: this.statusButtonColor(childData.clockin_status),
         });
       });
       this.setState(prevData => {
         return { dataSource: responseData };
       });
       console.log(this.state.dataSource);
+  }
+
+  statusButtonColor(status) {
+    switch(status.toUpperCase()) {
+      case "IN": return "#1EBC7C";
+      case "ON LEAVE": return "#EFB406";
+      default: return "#DA4437";
+    }
   }
 
   render() {
