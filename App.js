@@ -4,11 +4,6 @@ import firebase from 'react-native-firebase';
 
 export default class App1 extends React.Component {
 
-  // database = null;
-  // firebaseApp;
-
-  static firebase;
-
   constructor(props) {
     super(props);
 
@@ -21,7 +16,10 @@ export default class App1 extends React.Component {
       messagingSenderId: "199577270778"
     };
 
-    firebase.initializeApp(firebaseConfig);
+    if (firebase.app() == null) {
+      firebase.initializeApp(firebaseConfig);
+    }
+    console.log(firebase.app().name);
 
     this.state = {
       isReady: false

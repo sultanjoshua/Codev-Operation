@@ -105,7 +105,7 @@ class All extends Component {
   }
 
   componentDidMount() {
-    firebase.database().ref('employees').on('value', this.populateSnapshotData.bind(this));
+    firebase.app().database().ref('employees').on('value', this.populateSnapshotData.bind(this));
   }
 
   populateSnapshotData(snapshot) {
