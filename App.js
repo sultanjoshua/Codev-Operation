@@ -7,8 +7,10 @@ export default class App1 extends React.Component {
   // database = null;
   // firebaseApp;
 
-  constructor() {
-    super();
+  static firebase;
+
+  constructor(props) {
+    super(props);
 
     var firebaseConfig = {
       apiKey: "AIzaSyDajFDLX7j3sdbSvcnGUfbeJnFwfAcGecE",
@@ -26,25 +28,25 @@ export default class App1 extends React.Component {
     }; 
   }
 
-  componentDidMount() {
+  // componentDidMount() {
     // firebase.auth().signInAnonymously()
     //   .then((user) => {
     //     console.log(user.isAnonymous);
     //   });
 
-    this.createEmployee('josh', 'joshuas@codev.com');
-    this.createEmployee('joshua', 'joshuas@codev.com');
+    // this.createEmployee('josh', 'joshuas@codev.com');
+    // this.createEmployee('joshua', 'joshuas@codev.com');
 
-    firebase.database().ref('employees').on('value', function(snapshot) {
-      snapshot.forEach(function(childSnapshot) {
-        var childKey = childSnapshot.key;
-        var childData = childSnapshot.val();
+    // firebase.database().ref('employees').on('value', function(snapshot) {
+    //   snapshot.forEach(function(childSnapshot) {
+    //     var childKey = childSnapshot.key;
+    //     var childData = childSnapshot.val();
 
-        alert('Username: ' + childData.username + " email: " + childData.email);
-        console.log('Username: ' + childData.username + " email: " + childData.email);
-      });
-    });
-  }
+    //     // alert('Username: ' + childData.username + " email: " + childData.email);
+    //     console.log('Username: ' + childData.username + " email: " + childData.email);
+    //   });
+    // });
+  // }
 
   createEmployee(name, email) {
     var key = firebase.database().ref().child('employees').push().key;
