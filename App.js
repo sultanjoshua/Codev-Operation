@@ -28,10 +28,7 @@ export default class App1 extends React.Component {
   }
 
   componentDidMount() {
-    // firebase.auth().signInAnonymously()
-    //   .then((user) => {
-    //     console.log(user.isAnonymous);
-    //   });
+    
 
     // this.createEmployee('josh', 'joshuas@codev.com');
     // this.createEmployee('joshua', 'joshuas@codev.com');
@@ -65,26 +62,35 @@ export default class App1 extends React.Component {
     //     console.log(e);
     //   });
 
-    firebase.messaging().requestPermissions();
-    firebase.messaging().getToken()
-      .then(token => {
-        console.log("token ---> ");
-        console.log(token);
-      })
-      .catch(e => {
-        console.log(e);
-      });
+    firebase.auth().signInAnonymously()
+      .then((user) => {
+        firebase.messaging().requestPermissions();
+        firebase.messaging().getToken()
+          .then(token => {
+            console.log("token ---> ");
+            console.log(token);
+            console.log(firebase.auth().user);
+            firebase.database().ref('logins').set({
+              uid: user.uid,
+              token: token,
+            });
+          
+          })
+          .catch(e => {
+            console.log(e);
+          });
 
-    firebase.messaging().onTokenRefresh(_ => {
-      firebase.messaging().getToken()
-      .then(refreshedToken => {
-        console.log("refreshedToken ---> ");
-        console.log(refreshedToken);
-      })
-      .catch(e => {
-        console.log(e);
+        firebase.messaging().onTokenRefresh(_ => {
+          firebase.messaging().getToken()
+          .then(refreshedToken => {
+            console.log("refreshedToken ---> ");
+            console.log(refreshedToken);
+          })
+          .catch(e => {
+            console.log(e);
+          });
+        });
       });
-    });
 
     firebase.messaging().onMessage(payload => {
       console.log("payload ---> ");
