@@ -45,8 +45,8 @@ export default class App1 extends React.Component {
           console.log("token ---> ");
           console.log(token);
           console.log(auth.user);
-          database.ref('logins').set({
-            uid: user.uid,
+          
+          database.ref('logins').child(user.uid).set({
             token: token,
           });
         })
