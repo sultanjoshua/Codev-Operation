@@ -1,4 +1,6 @@
 import React, { Component } from "react";
+import firebase from 'react-native-firebase';
+import {Image} from 'react-native'
 
 import {
   Container,
@@ -19,58 +21,101 @@ import {
 
 import styles from "./styles";
 
-const joshua = require("../../../img/joshua.jpg");
-const richyll = require("../../../img/richyll.jpg");
-const michael = require("../../../img/michael.png");
-const pratik = require("../../../img/pratik.png");
-const sanket = require("../../../img/sanket.png");
-const megha = require("../../../img/megha.png");
-const atul = require("../../../img/atul.png");
-const saurabh = require("../../../img/saurabh.png");
-const varun = require("../../../img/varun.png");
+// const joshua = require("../../../img/joshua.jpg");
+// const richyll = require("../../../img/richyll.jpg");
+// const michael = require("../../../img/michael.png");
+// const pratik = require("../../../img/pratik.png");
+// const sanket = require("../../../img/sanket.png");
+// const megha = require("../../../img/sanket.png");
+// const atul = require("../../../img/atul.png");
+// const saurabh = require("../../../img/saurabh.png");
+// const varun = require("../../../img/varun.png");
 
-const datas = [
-  {
-    img: joshua,
-    text: "Joshua Sultan",
-    note: "Nov 1 - Nov 8",
-    status: "Vacation",
-    bg: "#3591FA",
-  },
-  {
-    img: richyll,
-    text: "Richyll Son",
-    note: "Nov 1 - Nov 8",
-    status: "Vacation",
-    bg: "#3591FA",
-  },
-  {
-    img: joshua,
-    text: "Joshua Sultan",
-    note: "Nov 28 - Dec 1",
-    status: "Vacation",
-    bg: "#3591FA",
-  },
-  {
-    img: michael,
-    text: "Michael Gilos",
-    note: "Nov 22",
-    status: "Sick",
-    bg: "#EF6092",
-  }
-];
+// const datas = [
+//   {
+//     img: joshua,
+//     text: "Joshua Sultan",
+//     note: "Nov 1 - Nov 8",
+//     status: "Vacation",
+//     bg: "#3591FA",
+//   },
+//   {
+//     img: richyll,
+//     text: "Richyll Son",
+//     note: "Nov 1 - Nov 8",
+//     status: "Vacation",
+//     bg: "#3591FA",
+//   },
+//   {
+//     img: joshua,
+//     text: "Joshua Sultan",
+//     note: "Nov 28 - Dec 1",
+//     status: "Vacation",
+//     bg: "#3591FA",
+//   },
+//   {
+//     img: michael,
+//     text: "Michael Gilos",
+//     note: "Nov 22",
+//     status: "Sick",
+//     bg: "#EF6092",
+//   }
+// ];
 
 class Approved extends Component {
+
+  constructor(props) {
+    super(props);
+    
+    this.state = {dataSource: []};
+  }
+  
+  componentDidMount() {
+    firebase.app().database().ref('leaves').on('value', this.populateSnapshotData.bind(this));
+  }
+  
+  populateSnapshotData(snapshot) {
+    var responseData = [];
+      snapshot.forEach( childSnapshot => {
+        var childKey = childSnapshot.key;
+        var childData = childSnapshot.val();
+        
+        // console.log(childData);
+        if (childData.status.toUpperCase() == "APPROVED") {
+          responseData.push({
+            img: childData.image_path,
+            text: childData.name,
+            note: childData.dates,
+            status: childData.type,
+            bg: this.statusButtonColor(childData.type),
+          });
+        }
+      });
+      this.setState(prevData => {
+        return { dataSource: responseData };
+      });
+      console.log(this.state.dataSource);
+  }
+
+  statusButtonColor(status) {
+    switch(status.toUpperCase()) {
+      case "SICK": return "#EF6092";
+      default: return "#3591FA";
+    }
+  }
+  
   render() {
     return (
       <Container style={styles.container}>
         <Content>
           <List
-            dataArray={datas}
+            dataArray={this.state.dataSource}
             renderRow={data =>
               <ListItem thumbnail>
                 <Left>
-                  <Thumbnail square size={55} source={data.img} />
+                <Image 
+                  source={{uri : data.img}} 
+                  style = {{height: 50, width: 50, margin: 1 }} />
                 </Left>
                 <Body>
                   <Text>{data.text}</Text>

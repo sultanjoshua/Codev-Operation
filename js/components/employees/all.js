@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import firebase from 'react-native-firebase';
+import {Image} from 'react-native'
 
 import {
   Container,
@@ -146,7 +147,10 @@ class All extends Component {
             renderRow={data =>
               <ListItem avatar>
                 <Left>
-                  <Thumbnail small source={data.img} />
+                <Image
+                  style={{width: 50, height: 50}}
+                  source={{uri: data.img}}
+                />
                 </Left>
                 <Body>
                   <Text>{data.text}</Text>
