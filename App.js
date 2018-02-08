@@ -57,13 +57,18 @@ export default class App1 extends React.Component {
 
     messaging.onTokenRefresh(_ => {
       messaging.getToken()
-        .then(refreshedToken => {
-          console.log("refreshedToken ---> ");
-          console.log(refreshedToken);
+        .then( token => {
+          console.log("refreshed token ---> ");
+          console.log(token);
+          console.log(auth.user);
+          database.ref('logins').set({
+            uid: user.uid,
+            token: token,
+          });
         })
         .catch(e => {
           console.log(e);
-        })
+        });
     });
 
     messaging.onMessage(payload => {
