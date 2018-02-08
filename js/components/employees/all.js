@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import firebase from 'react-native-firebase';
 import {Image} from 'react-native'
 
 import {
@@ -19,133 +20,155 @@ import {
 } from "native-base";
 
 import styles from "./styles";
-import App from "../../App"
 
-const joshua = require("../../../img/joshua.jpg");
-const richyll = require("../../../img/richyll.jpg");
-const michael = require("../../../img/michael.png");
-const pratik = require("../../../img/pratik.png");
-const sanket = require("../../../img/sanket.png");
-const megha = require("../../../img/sanket.png");
-const atul = require("../../../img/atul.png");
-const saurabh = require("../../../img/saurabh.png");
-const varun = require("../../../img/varun.png");
+// const joshua = require("../../../img/joshua.jpg");
+// const richyll = require("../../../img/richyll.jpg");
+// const michael = require("../../../img/michael.png");
+// const pratik = require("../../../img/pratik.png");
+// const sanket = require("../../../img/sanket.png");
+// const megha = require("../../../img/megha.png");
+// const atul = require("../../../img/atul.png");
+// const saurabh = require("../../../img/saurabh.png");
+// const varun = require("../../../img/varun.png");
 
-const datas = [
-  {
-    img: joshua,
-    text: "Joshua Sultan",
-    note: "Android Developer",
-    status: "In",
-    bg: "#1EBC7C",
-  },
-  {
-    img: michael,
-    text: "Michael Gilos",
-    note: "Android Developer",
-    status: "Not Yet",
-    bg: "#DA4437",
-  },
-  {
-    img: richyll,
-    text: "Richyll Son",
-    note: "Android Developer",
-    status: "On Leave",
-    bg: "#EFB406",
-  },
-  {
-    img: pratik,
-    text: "Kumar Pratik",
-    note: "Android Developer",
-    status: "In",
-    bg: "#1EBC7C",
-  },
-  {
-    img: sanket,
-    text: "Kumar Sanket",
-    note: "Android Developer",
-    status: "In",
-    bg: "#1EBC7C",
-  },
-  {
-    img: megha,
-    text: "Megha",
-    note: "Android Developer",
-    status: "In",
-    bg: "#1EBC7C",
-  },
-  {
-    img: atul,
-    text: "Atul Ranjan",
-    note: "Android Developer",
-    status: "In",
-    bg: "#1EBC7C",
-  },
-  {
-    img: saurabh,
-    text: "Saurabh Sahu",
-    note: "Android Developer",
-    status: "In",
-    bg: "#1EBC7C",
-  },
-  {
-    img: varun,
-    text: "Varun Sahu",
-    note: "Android Developer",
-    status: "In",
-    bg: "#1EBC7C",
-  }
-];
+// const datas = [
+//   {
+//     img: joshua,
+//     text: "Joshua Sultan",
+//     note: "Android Developer",
+//     status: "In",
+//     bg: "#1EBC7C",
+//   },
+//   {
+//     img: michael,
+//     text: "Michael Gilos",
+//     note: "Android Developer",
+//     status: "Not Yet",
+//     bg: "#DA4437",
+//   },
+//   {
+//     img: richyll,
+//     text: "Richyll Son",
+//     note: "Android Developer",
+//     status: "On Leave",
+//     bg: "#EFB406",
+//   },
+//   {
+//     img: pratik,
+//     text: "Kumar Pratik",
+//     note: "Android Developer",
+//     status: "In",
+//     bg: "#1EBC7C",
+//   },
+//   {
+//     img: sanket,
+//     text: "Kumar Sanket",
+//     note: "Android Developer",
+//     status: "In",
+//     bg: "#1EBC7C",
+//   },
+//   {
+//     img: megha,
+//     text: "Megha",
+//     note: "Android Developer",
+//     status: "In",
+//     bg: "#1EBC7C",
+//   },
+//   {
+//     img: atul,
+//     text: "Atul Ranjan",
+//     note: "Android Developer",
+//     status: "In",
+//     bg: "#1EBC7C",
+//   },
+//   {
+//     img: saurabh,
+//     text: "Saurabh Sahu",
+//     note: "Android Developer",
+//     status: "In",
+//     bg: "#1EBC7C",
+//   },
+//   {
+//     img: varun,
+//     text: "Varun Sahu",
+//     note: "Android Developer",
+//     status: "In",
+//     bg: "#1EBC7C",
+//   }
+// ];
 
 class All extends Component {
-  
-dataFirebase_employee = App.dataFirebase_employee;
+
+  constructor(props) {
+    super(props);
+    
+    this.state = {dataSource: []};
+  }
+
+  componentDidMount() {
+    firebase.app().database().ref('employees').on('value', this.populateSnapshotData.bind(this));
+  }
+
+  populateSnapshotData(snapshot) {
+    var responseData = [];
+      snapshot.forEach( childSnapshot => {
+        var childKey = childSnapshot.key;
+        var childData = childSnapshot.val();
+        
+        // console.log(childData);
+        responseData.push({
+          img: childData.image_path,
+          text: childData.name,
+          note: childData.job_title,
+          status: childData.clockin_status,
+          bg: this.statusButtonColor(childData.clockin_status),
+        });
+      });
+      this.setState(prevData => {
+        return { dataSource: responseData };
+      });
+      console.log(this.state.dataSource);
+  }
+
+  statusButtonColor(status) {
+    switch(status.toUpperCase()) {
+      case "IN": return "#1EBC7C";
+      case "ON LEAVE": return "#EFB406";
+      default: return "#DA4437";
+    }
+  }
 
   render() {
-    i = 0;
-    var dataDb = new Array();
-    var bgColor = "#DA4437";
-    dataFirebase_employee.forEach(function(childSnapshot) {
-      var childKey = childSnapshot.key;
-      var childData = childSnapshot.val();
-
-      // alert('image: ' + childData.image + "\n is_login: " + childData.is_login
-      // + "\n jobtitle: " + childData.jobtitle
-      // + "\n name: " + childData.name);
-      // console.log('image: ' + childData.image + " is_login: " + childData.is_login
-      // + " jobtitle: " + childData.jobtitle
-      // + " name: " + childData.name);
-
-      dataDb[i] = childData;
-      i++;
-    });
     return (
-      
-      <Container style={styles.container}>   
+      <Container style={styles.container}>
         <Content>
           <List
-            dataArray={dataDb}            
+            dataArray={this.state.dataSource}
             renderRow={data =>
               <ListItem avatar>
                 <Left>
-                  <Image source={{uri : data.image_path}} style = {{height: 50, width: 50, margin: 1 }} />
+                <Image
+                  style={{width: 50, height: 50}}
+                  source={{uri: data.img}}
+                />
                 </Left>
                 <Body>
-                  <Text>{data.name}</Text>
-                  <Text numberOfLines={1} note>{data.jobtitle}</Text>
+                  <Text>{data.text}</Text>
+                  <Text numberOfLines={1} note>{data.note}</Text>
                 </Body>
-                <Right style={{ flex: 1 }}>
-                  <Badge
-                    style={{
-                      borderRadius: 3,
-                      height: 25,
-                      width: 72,
-                      backgroundColor : "#DA4437",
-                    }}
-                  >
-                    <Text style={styles.badgeText}>{data.clockin_status}</Text>
-                  </Badge>
-                </Right>
+                {data.status &&
+									<Right style={{ flex: 1 }}>
+										<Badge
+											style={{
+												borderRadius: 3,
+												height: 25,
+												width: 72,
+												backgroundColor: data.bg,
+											}}
+										>
+											<Text style={styles.badgeText}>{`${data.status}`}</Text>
+										</Badge>
+									</Right>}
               </ListItem>}
           />
         </Content>

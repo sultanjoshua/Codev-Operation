@@ -4,14 +4,8 @@ import firebase from 'react-native-firebase';
 
 export default class App1 extends React.Component {
 
-  // database = null;
-  // firebaseApp;
-
-  dataFirebase_employee = null;
-  dataFirebase_leave = null;
-
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
 
     var firebaseConfig = {
       apiKey: "AIzaSyDajFDLX7j3sdbSvcnGUfbeJnFwfAcGecE",
@@ -22,56 +16,35 @@ export default class App1 extends React.Component {
       messagingSenderId: "199577270778"
     };
 
-    firebase.initializeApp(firebaseConfig);
+    if (firebase.app() == null) {
+      firebase.initializeApp(firebaseConfig);
+    }
+    console.log(firebase.app().name);
 
     this.state = {
       isReady: false
-    };
+    }; 
   }
 
-  componentDidMount() {
+  // componentDidMount() {
     // firebase.auth().signInAnonymously()
     //   .then((user) => {
     //     console.log(user.isAnonymous);
     //   });
 
-    //this.createEmployee('josh', 'joshuas@codev.com');
-    //this.createEmployee('joshua', 'joshuas@codev.com');
+    // this.createEmployee('josh', 'joshuas@codev.com');
+    // this.createEmployee('joshua', 'joshuas@codev.com');
 
-    firebase.database().ref('employees').on('value', function(snapshot) {
+    // firebase.database().ref('employees').on('value', function(snapshot) {
+    //   snapshot.forEach(function(childSnapshot) {
+    //     var childKey = childSnapshot.key;
+    //     var childData = childSnapshot.val();
 
-      dataFirebase_employee = snapshot;
-      // snapshot.forEach(function(childSnapshot) {
-      //   var childKey = childSnapshot.key;
-      //   var childData = childSnapshot.val();
-
-        // alert('image: ' + childData.image + "\n is_login: " + childData.is_login
-        // + "\n jobtitle: " + childData.jobtitle
-        // + "\n name: " + childData.name);
-        // console.log('image: ' + childData.image + " is_login: " + childData.is_login
-        // + " jobtitle: " + childData.jobtitle
-        // + " name: " + childData.name);
-
-      //});
-    });
-
-    firebase.database().ref('leaves').on('value', function(snapshot) {
-      
-            dataFirebase_leave = snapshot;
-            // snapshot.forEach(function(childSnapshot) {
-            //   var childKey = childSnapshot.key;
-            //   var childData = childSnapshot.val();
-      
-              // alert('image: ' + childData.image + "\n is_login: " + childData.is_login
-              // + "\n jobtitle: " + childData.jobtitle
-              // + "\n name: " + childData.name);
-              // console.log('image: ' + childData.image + " is_login: " + childData.is_login
-              // + " jobtitle: " + childData.jobtitle
-              // + " name: " + childData.name);
-      
-            //});
-          });
-  }
+    //     // alert('Username: ' + childData.username + " email: " + childData.email);
+    //     console.log('Username: ' + childData.username + " email: " + childData.email);
+    //   });
+    // });
+  // }
 
   createEmployee(name, email) {
     var key = firebase.database().ref().child('employees').push().key;
