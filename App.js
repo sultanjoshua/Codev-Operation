@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { Alert } from "react-native";
 import App from "./js/App";
 import firebase from 'react-native-firebase';
+import communications from 'react-native-communications';
 
 export default class App1 extends React.Component {
 
@@ -17,107 +18,95 @@ export default class App1 extends React.Component {
       messagingSenderId: "199577270778"
     };
 
+    this.unsubscriber = null;
+
     if (firebase.app() == null) {
       firebase.initializeApp(firebaseConfig);
     }
     console.log(firebase.app().name);
 
     this.state = {
-      isReady: false
+      user: null,
     }; 
   }
 
   componentDidMount() {
-    
+    var auth = firebase.auth();
+    var messaging = firebase.messaging();
+    var database = firebase.database();
 
-    // this.createEmployee('josh', 'joshuas@codev.com');
-    // this.createEmployee('joshua', 'joshuas@codev.com');
+    this.unsubscriber = auth.onAuthStateChanged(user => {
+      this.setState({user});
+      console.log(user);
 
-    // firebase.database().ref('employees').on('value', function(snapshot) {
-    //   snapshot.forEach(function(childSnapshot) {
-    //     var childKey = childSnapshot.key;
-    //     var childData = childSnapshot.val();
+      messaging.requestPermissions();
+      messaging.getToken()
+        .then( token => {
+          console.log("token ---> ");
+          console.log(token);
+          console.log(auth.user);
+          database.ref('logins').set({
+            uid: user.uid,
+            token: token,
+          });
+        })
+        .catch(e => {
+          console.log(e);
+        });
+    });
 
-    //     // alert('Username: ' + childData.username + " email: " + childData.email);
-    //     console.log('Username: ' + childData.username + " email: " + childData.email);
-    //   });
-    // });
-
-
-  // var admin = require("firebase-admin");
-
-  // var serviceAccount = require("./zylun-ops-app-e7b7d1c0043c.json");
-
-  // admin.initializeApp({
-  //   credential: admin.credential.cert(serviceAccount),
-  //   databaseURL: "https://zylun-ops-app.firebaseio.com"
-  // });
-
-    // firebase.auth().signInAnonymously()
+    // auth.signInAnonymously()
     //   .then(user => {
-    //     console.log("user ---> ");
-    //     console.log(user);
+    //     messaging.requestPermissions();
+    //     return messaging.getToken();
+    //   })
+    //   .then(token => {
+    //     console.log("token ---> ");
+    //     console.log(token);
+    //     console.log(auth.user);
+    //     database.ref('logins').set({
+    //       uid: user.uid,
+    //       token: token,
+    //     })
     //   })
     //   .catch(e => {
     //     console.log(e);
     //   });
 
-    firebase.auth().signInAnonymously()
-      .then((user) => {
-        firebase.messaging().requestPermissions();
-        firebase.messaging().getToken()
-          .then(token => {
-            console.log("token ---> ");
-            console.log(token);
-            console.log(firebase.auth().user);
-            firebase.database().ref('logins').set({
-              uid: user.uid,
-              token: token,
-            });
-          
-          })
-          .catch(e => {
-            console.log(e);
-          });
+    messaging.onTokenRefresh(_ => {
+      messaging.getToken()
+        .then(refreshedToken => {
+          console.log("refreshedToken ---> ");
+          console.log(refreshedToken);
+        })
+        .catch(e => {
+          console.log(e);
+        })
+    });
 
-        firebase.messaging().onTokenRefresh(_ => {
-          firebase.messaging().getToken()
-          .then(refreshedToken => {
-            console.log("refreshedToken ---> ");
-            console.log(refreshedToken);
-          })
-          .catch(e => {
-            console.log(e);
-          });
-        });
-      });
-
-    firebase.messaging().onMessage(payload => {
+    messaging.onMessage(payload => {
       console.log("payload ---> ");
       console.log(payload);
       
       Alert.alert(payload.fcm.title,
         payload.fcm.body,
-        [{text: payload.fcm.action, onPress: () => console.log("Did press "+ payload.fcm.action)}]
+        [{text: payload.fcm.action, onPress: this.fcmAction}]
       );
     });
+  }
 
-  // var payload = {
-  //                 "message":{
-  //                   "token" : "d8r3IMZHM_s:APA91bE8G0VTwLidACNhyr_TYwVYfzvxqsfOIfqhloxSDSBeALYx8fCWqqmsZRstij5LN6UcHStmfY-jhRbgvuP7P3JUulNJUjBJv4z22DtVEt0wW6W_PgdwTP5Wv1gtT_flLl88x28u",
-  //                   "notification" : {
-  //                                     "body" : "This is an FCM notification message!",
-  //                                     "title" : "FCM Message",
-  //                                     }
-  //                 }
-  //               }
+  componentWillUnmount() {
+    if (this.unsubscriber) {
+      this.unsubscriber();
+    }
+  }
 
-  //   firebase.messaging().send("199577270778", payload)
-  //     .then(result =>{
-  //       console.log("result ---> ");
-  //       console.log(result);
-  //     })
-      
+  fcmAction() {
+    Alert.alert("Action",
+      "Choose your action",
+      [{text: "Call", onPress: () => communications.phonecall("09277250722", true)},
+       {text: "SMS", onPress: () => communications.text("09277250722")}]
+    );
   }
 
   // createEmployee(name, email) {
