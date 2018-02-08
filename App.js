@@ -55,24 +55,6 @@ export default class App1 extends React.Component {
         });
     });
 
-    // auth.signInAnonymously()
-    //   .then(user => {
-    //     messaging.requestPermissions();
-    //     return messaging.getToken();
-    //   })
-    //   .then(token => {
-    //     console.log("token ---> ");
-    //     console.log(token);
-    //     console.log(auth.user);
-    //     database.ref('logins').set({
-    //       uid: user.uid,
-    //       token: token,
-    //     })
-    //   })
-    //   .catch(e => {
-    //     console.log(e);
-    //   });
-
     messaging.onTokenRefresh(_ => {
       messaging.getToken()
         .then(refreshedToken => {
@@ -88,11 +70,17 @@ export default class App1 extends React.Component {
       console.log("payload ---> ");
       console.log(payload);
       
+      var contactNumber = payload.fcm.body
+      var q = "Number:";
+      var index = contactNumber.indexOf(q)+q.length;
+      this.contactNumber = contactNumber.substring(index).trim();
+      console.log(this.contactNumber);
+
       Alert.alert(payload.fcm.title,
         payload.fcm.body,
-        [{text: payload.fcm.action, onPress: this.fcmAction}]
+        [{text: payload.fcm.action, onPress: this.fcmAction.bind(this)}]
       );
-    });
+    }).bind(this);
   }
 
   componentWillUnmount() {
@@ -102,10 +90,11 @@ export default class App1 extends React.Component {
   }
 
   fcmAction() {
+    console.log(this.contactNumber);
     Alert.alert("Action",
       "Choose your action",
-      [{text: "Call", onPress: () => communications.phonecall("09277250722", true)},
-       {text: "SMS", onPress: () => communications.text("09277250722")}]
+      [{text: "Call", onPress: () => communications.phonecall(this.contactNumber, true)},
+       {text: "SMS", onPress: () => communications.text(this.contactNumber)}]
     );
   }
 
