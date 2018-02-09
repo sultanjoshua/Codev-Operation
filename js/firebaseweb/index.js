@@ -10,32 +10,35 @@ const functions = require('firebase-functions');
 
 admin.initializeApp(functions.config().firebase);
 
-exports.sendMessage = functions.database.ref('employees/{employeeId}').onUpdate(event =>{
+exports.sendMessage = functions.database.ref('employees/{employeeId}').onUpdate(event => {
     var affectedObj = event.data.val();
     admin.database().ref('logins').once("value", event => {
-        var token = event.val().token
-        var registrationToken = token;
+        var data = event.val();
+        for (const key in data) {
+            var token = data[key].token
+            var registrationToken = token;
 
-        var payload =   { 
-                            "notification":
-                                {
-                                    "title": "Clock " + affectedObj.clockin_status,
-                                    "body": "Employee: " + affectedObj.name + " Contact Number:" + affectedObj.contactNumber,
-                                    "click_action" : "Action",
-                                }
-                        }
-
-        // Send a message to the device corresponding to the provided
-        // registration token.
-        admin.messaging().sendToDevice(registrationToken, payload)
-            .then(response => {
-                // See the MessagingDevicesResponse reference documentation for
-                // the contents of response.
-                console.log("Successfully sent message:", response);
-                return true;
-            })
-            .catch(error => {
-                console.log("Error sending message:", error);
-            });
+            var payload =   { 
+                                "notification":
+                                    {
+                                        "title": "Clock " + affectedObj.clockin_status,
+                                        "body": "Employee: " + affectedObj.name + " Contact Number:" + affectedObj.contactNumber,
+                                        "click_action" : "Action",
+                                    }
+                            }
+    
+            // Send a message to the device corresponding to the provided
+            // registration token.
+            admin.messaging().sendToDevice(registrationToken, payload)
+                .then(response => {
+                    // See the MessagingDevicesResponse reference documentation for
+                    // the contents of response.
+                    console.log("Successfully sent message:", response);
+                    return true;
+                })
+                .catch(error => {
+                    console.log("Error sending message:", error);
+                });
+        }
     });
 });
